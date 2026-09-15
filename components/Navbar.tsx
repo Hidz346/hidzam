@@ -2,9 +2,11 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Activity, ShieldCheck, Sparkles } from 'lucide-react';
+import { Activity, ShieldCheck, Sparkles, Sun, Moon } from 'lucide-react';
 
-export default function Navbar() {
+type Theme = 'night' | 'light';
+
+export default function Navbar({ theme, onThemeChange }: { theme: Theme; onThemeChange: (theme: Theme) => void }) {
   return (
     <header className="site-header">
       <div className="ticker" aria-hidden="true">
@@ -41,13 +43,26 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="nav-status">
+        <div className="nav-actions">
+          <button
+            type="button"
+            className="theme-toggle neo-button"
+            onClick={() => onThemeChange(theme === 'night' ? 'light' : 'night')}
+            aria-label={`Aktifkan mode ${theme === 'night' ? 'light' : 'night'}`}
+            title={`Mode ${theme === 'night' ? 'Light' : 'Night'}`}
+          >
+            {theme === 'night' ? <Sun size={15} /> : <Moon size={15} />}
+            <span>{theme === 'night' ? 'LIGHT' : 'NIGHT'}</span>
+          </button>
+
+          <div className="nav-status">
           <span className="status-dot" />
           <div>
             <strong>ONLINE</strong>
             <small>HIDZ SERVICE</small>
           </div>
         </div>
+      </div>
       </div>
 
       <div className="nav-meta">
