@@ -1,0 +1,6 @@
+{
+  "name": "HIDZ AM PREMIUM",
+  "description": "Layanan HIDZ dengan antarmuka verifikasi akun yang terstruktur, responsif, dan mudah digunakan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
