@@ -54,6 +54,17 @@ export default function Home() {
     }
   });
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [theme, setTheme] = useState<'night' | 'light'>('night');
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem('hidz-am-theme');
+    if (saved === 'light' || saved === 'night') setTheme(saved);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem('hidz-am-theme', theme);
+  }, [theme]);
 
   const refreshStats = async () => {
     try {
@@ -226,8 +237,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen text-white flex flex-col">
-      <Navbar />
+    <div className={`site-root min-h-screen flex flex-col ${theme === 'light' ? 'theme-light' : 'theme-night'}`}>
+      <Navbar theme={theme} onThemeChange={setTheme} />
 
       <main className="w-full max-w-[1180px] mx-auto px-3 sm:px-5 py-5 sm:py-8 space-y-5">
         <section className="neo-card scanlines grid-bg p-5 sm:p-8 relative">
@@ -330,7 +341,7 @@ export default function Home() {
                 type="button"
                 onClick={() => setStep((index + 1) as 1 | 2 | 3)}
                 disabled={index === 2 && !verificationResult}
-                className={`neo-button px-2 py-3 text-[10px] sm:text-xs ${step === index + 1 ? 'bg-cyan-300 text-black shadow-[4px_4px_0_#7b35ff]' : 'bg-[#151a28] text-slate-300 shadow-[3px_3px_0_#030407]'}`}
+                className={`neo-button px-2 py-3 text-[10px] sm:text-xs ${step === index + 1 ? 'bg-cyan-300 text-black shadow-[4px_4px_0_#7b35ff]' : 'bg-button text-slate-300 shadow-[3px_3px_0_#030407]'}`}
               >
                 <span className="block font-mono text-[9px] opacity-60">0{number}</span>
                 {label}
@@ -340,7 +351,7 @@ export default function Home() {
 
           {step === 1 && (
             <div className="grid lg:grid-cols-[1.25fr_.75fr] gap-5">
-              <div className="bg-[#090c14] border border-[#27304a] p-4 sm:p-5">
+              <div className="bg-panel border border-line p-4 sm:p-5">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 border border-cyan-400 bg-cyan-400/10 flex items-center justify-center text-cyan-300"><Mail size={18} /></div>
                   <div>
@@ -368,7 +379,7 @@ export default function Home() {
                       <KeyRound size={14} /> {showAdvanced ? 'SEMBUNYIKAN OPSI SESI' : 'BUKA OPSI SESI'}
                     </button>
                     {showAdvanced && (
-                      <div className="mt-3 border border-[#27304a] bg-[#070a10] p-3 space-y-2">
+                      <div className="mt-3 border border-line bg-panel-deep p-3 space-y-2">
                         <label className="block text-[10px] font-black font-mono text-slate-400">SESSION IDENTIFIER / OPSIONAL</label>
                         <input
                           type="text"
@@ -390,14 +401,14 @@ export default function Home() {
                 </form>
               </div>
 
-              <aside className="border border-[#27304a] bg-[#0a0d15] p-4">
+              <aside className="border border-line bg-panel p-4">
                 <div className="flex items-center gap-2 text-violet-300"><Sparkles size={16} /><span className="text-[10px] font-black font-mono tracking-[.14em]">CATATAN PENTING</span></div>
                 <ul className="mt-4 space-y-3 text-xs text-slate-400 leading-5">
                   <li>• Pastikan penulisan email benar sebelum mengirim permintaan.</li>
                   <li>• Periksa inbox dan folder spam jika pesan belum terlihat.</li>
                   <li>• Gunakan satu sesi proses pada satu waktu untuk hasil yang lebih konsisten.</li>
                 </ul>
-                <div className="mt-5 border-t border-[#27304a] pt-4 text-[10px] font-mono text-slate-500">HIDZ / INPUT CHECK / READY</div>
+                <div className="mt-5 border-t border-line pt-4 text-[10px] font-mono text-slate-500">HIDZ / INPUT CHECK / READY</div>
               </aside>
             </div>
           )}
@@ -413,8 +424,8 @@ export default function Home() {
                 </a>
               </aside>
 
-              <form onSubmit={handleVerifyLink} className="bg-[#090c14] border border-[#27304a] p-4 sm:p-5 space-y-4">
-                <div className="flex items-center justify-between gap-3 border-b border-[#27304a] pb-3">
+              <form onSubmit={handleVerifyLink} className="bg-panel border border-line p-4 sm:p-5 space-y-4">
+                <div className="flex items-center justify-between gap-3 border-b border-line pb-3">
                   <div className="text-[10px] font-mono font-black tracking-[.14em] text-cyan-300">TARGET / {email || 'BELUM ADA EMAIL'}</div>
                   <button type="button" onClick={() => setStep(1)} className="text-[10px] font-black text-slate-500 hover:text-white">GANTI</button>
                 </div>
@@ -473,7 +484,7 @@ export default function Home() {
               ['02', 'Kirim lalu salin', 'Setelah pesan diterima, salin tautan verifikasi tanpa memotong bagian URL.'],
               ['03', 'Tinjau hasil', 'Masukkan tautan pada tahap kedua dan periksa ringkasan hasil yang ditampilkan.'],
             ].map(([num, title, text]) => (
-              <div key={num} className="border border-[#27304a] bg-[#090c14] p-4">
+              <div key={num} className="border border-line bg-panel p-4">
                 <span className="text-violet-300 font-black font-mono text-xs">{num}</span>
                 <h3 className="mt-2 font-black uppercase text-sm">{title}</h3>
                 <p className="mt-1.5 text-xs leading-5 text-slate-500">{text}</p>
@@ -483,7 +494,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="mt-5 border-t border-[#27304a] bg-[#05060a]">
+      <footer className="mt-5 border-t border-line bg-footer">
         <div className="w-full max-w-[1180px] mx-auto px-4 py-7 flex flex-col sm:flex-row justify-between gap-5">
           <div>
             <div className="font-black tracking-[.12em]">HIDZ <span className="text-cyan-300">AM PREMIUM</span></div>
